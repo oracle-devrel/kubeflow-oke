@@ -145,8 +145,10 @@ In this guide, we will use the OCI Cloud Shell console, and all these tools are 
 3. Change the default password
 
     By default email user@example.com and password is 12341234
-
-    Generate a password. ***Replace PASSWORD with your own password.***
+    
+    Generate a password.
+    
+    **Replace PASSWORD with your own password.**
 
         PASSWORD=YOURPASSWORD
         kubeflow_password=$(htpasswd -nbBC 12 USER $PASSWORD| sed -r 's/^.{5}//')
@@ -205,11 +207,10 @@ kubectl get pods -n kubeflow-user-example-com
 
 ### Access Kubeflow Dashboard
 
-## Access Kubeflow
-
-1. Expose Kubeflow to Internet
+#### Expose Kubeflow to Internet
 
 Kubeflow v1.6 already deploy a load balancer and expose the dashboard to Internet.
+
 ⚠️ Change the password before, and let's forward HTTP to HTTPS with a self-signed certificate.
 
 Change istio-ingressgateway to LoadBalancer
@@ -228,38 +229,38 @@ EOF
 ```
     kubectl patch svc istio-ingressgateway -n istio-system -p "$(cat $HOME/kubeflow_1.6/patchservice_lb.yaml)"
 
-1. Enable HTTPS
+#### Enable HTTPS
 
-   1. Generate SSL certificate
+  * Generate SSL certificate
 
-  we suggest using https://smallstep.com/
+  We suggest using https://smallstep.com/
 
   Make sure you are in the top level directory
 
-        cd $HOME          
-        mkdir keys;cd keys
-        wget -O step.tar.gz https://dl.step.sm/gh-release/cli/docs-ca-install/v0.20.0/step_linux_0.20.0_amd64.tar.gz
-        tar -xf step.tar.gz
-        cp step_0.20.0/bin/step .
+    cd $HOME          
+    mkdir keys;cd keys
+    wget -O step.tar.gz https://dl.step.sm/gh-release/cli/docs-ca-install/v0.20.0/step_linux_0.20.0_amd64.tar.gz
+    tar -xf step.tar.gz
+    cp step_0.20.0/bin/step .
 
   Generate root certificate
 
-        cd $HOME/keys
-        $HOME/keys/step certificate create root.cluster.local root.crt root.key --profile root-ca --no-password --insecure --kty=RSA
+    cd $HOME/keys
+    $HOME/keys/step certificate create root.cluster.local root.crt root.key --profile root-ca --no-password --insecure --kty=RSA
 
   Get Ingress IP to generate certificate
   
-        External_IP=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
+    External_IP=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
+
+    cd $HOME/keys
+    $HOME/keys/step certificate create $External_IP.nip.io tls-$External_IP.crt tls-$External_IP.key --profile leaf  --not-after 8760h --no-password --insecure --kty=RSA --ca $HOME/keys/root.crt --ca-key $HOME/keys/root.key
+
+  * Create Kubernetes Secret TLS Certificate
 
         cd $HOME/keys
-        $HOME/keys/step certificate create $External_IP.nip.io tls-$External_IP.crt tls-$External_IP.key --profile leaf  --not-after 8760h --no-password --insecure --kty=RSA --ca $HOME/keys/root.crt --ca-key $HOME/keys/root.key
+        kubectl create secret tls kubeflow-tls-cert --key=tls-$External_IP.key --cert=tls-$External_IP.crt -n istio-system    
 
-  2. Create Kubernetes Secret TLS Certificate
-
-            cd $HOME/keys
-            kubectl create secret tls kubeflow-tls-cert --key=tls-$External_IP.key --cert=tls-$External_IP.crt -n istio-system    
-
-  3. Update Kubeflow API Gateway
+  * Update Kubeflow API Gateway
 
   Create API Gateway
 
@@ -314,13 +315,16 @@ Access $External_IP.nip.io
 MISSING -->
 
 ## URLs
-* www.kubeflow.org
+
+www.kubeflow.org
 
 ## Contributing
+
 This project is open source.  Please submit your contributions by forking this repository and submitting a pull request!  Oracle appreciates any contributions that are made by the open source community.
 
 ## License
-Copyright (c) 2021 Oracle and/or its affiliates.
+
+Copyright (c) 2022 Oracle and/or its affiliates.
 
 Licensed under the Universal Permissive License (UPL), Version 1.0.
 
