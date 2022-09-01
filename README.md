@@ -22,8 +22,6 @@
   - [Contributing](#contributing)
   - [License](#license)
 
-<!-- tocstop -->
-
 ## Introduction
 
 Running Kubeflow on [Oracle Container Engine (OKE)][uri-oke].
