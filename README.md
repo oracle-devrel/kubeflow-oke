@@ -306,7 +306,7 @@ Access $External_IP.nip.io
 
 ## URLs
 
-www.kubeflow.org
+Kubeflow: <https://www.kubeflow.org/>
 
 ## Contributing
 
