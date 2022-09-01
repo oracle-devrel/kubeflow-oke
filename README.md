@@ -24,15 +24,14 @@
 
 ## Introduction
 
-Running Kubeflow on [Oracle Container Engine (OKE)][uri-oke].
 
-OKE is [Oracle's][uri-oracle] managed [Kubernetes][uri-kubernetes] service on [Oracle Cloud Infrastructure (OCI)][uri-oci].
+Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed [Kubernetes][uri-kubernetes] service on [Oracle Cloud Infrastructure (OCI)][uri-oci]. 
 
 ## Getting Started
 
-> ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 and older versions, use OKE v1.21.5.
+> ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
-This guide explains how to install Kubeflow 1.6.0 on OKE 1.22.5, 1.23.4 and 1.24.1.
+This guide explains how to install Kubeflow 1.6.0 on OKE using Kubernetes versions 1.22.5, 1.23.4 and 1.24.1.
 
 ## Installation
 
@@ -40,14 +39,11 @@ This guide describes how to create a Kubernetes cluster using OKE, access OKE, i
 
 ### Prerequisites
 
-This guide can be run in many different ways, but in all cases, you will need access to an Oracle Cloud Tenancy and be signed in to it.
+This guide can be run in many different ways, but in all cases, you will need to be signed into an Oracle Cloud Infrastructure tenancy.
 
-The steps described below are executed from the Cloud Shell in the OCI console.
+This guide uses the [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/devcloudshellintro.htm) built into the Oracle Cloud Console but can also be run from your local workstation.
 
 ### Create an OKE cluster
-
-<!-- <details><summary><b>Create an OKE cluster manually</b>
-</summary> -->
 
 1. In the Console, open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, click **Kubernetes Clusters (OKE)**.
 
@@ -65,109 +61,84 @@ The steps described below are executed from the Cloud Shell in the OCI console.
 
     *Quick Create* will automatically create a new cluster with the default settings and new network resources for the new cluster.
 
-4. Specify the following configuration details on the Cluster Creation dialog (pay attention to the value you place in the **Shape** field):
+4. Specify the following configuration details on the Cluster Creation dialog paying close attention to the value you use in the **Shape** field:
 
-    * **Name**: The name of the cluster. Accept the default value.
-    * **Compartment**: The name of the compartment. Accept the default value.
+    * **Name**: The name of the cluster. Accept the default value or provide your own.
+    * **Compartment**: The name of the compartment. Accept the default value or provide your own.
     * **Kubernetes Version**: The version of Kubernetes. Select the **v1.23.4** version.
-    * **Kubernetes API Endpoint**: Determines if the cluster master nodes are going to be routable or not. Select the **Public Endpoint** value.
-    * **Kubernetes Worker Nodes**: Determines if the cluster worker nodes are going to be routable or not. Accept the default value **Private Workers**.
-    * **Shape**: The shape to use for each node in the node pool. The shape determines the number of CPUs and the amount of memory allocated to each node. The list shows only those shapes available in your tenancy that are supported by OKE.
+    * **Kubernetes API Endpoint**: Determines if the cluster control plane nodes will be directly accessible from external sources. Select the **Public Endpoint** value.
+    * **Kubernetes Worker Nodes**: Determines if the cluster worker nodes will be directly accessible from external sources. Accept the default value **Private Workers**.
+    * **Shape**: The shape to use for each node in the node pool. The shape determines the number of OCPUs and the amount of memory allocated to each node. The list shows only those shapes available in your tenancy that are supported by OKE.
     * **Number of nodes**: The number of worker nodes to create. Accept the default value **3**.
-<br>
-    > **Caution**: *VM.Standard.E4.Flex is the recommended shape, but you can adjust based on your requirements and location.*
+    > **Caution**: *VM.Standard.E4.Flex is the recommended shape but is not available to Always Free tenancies. You should adjust the shape based on your requirements and location.*
 
   ![Quick Cluster](images/oke-specs.png)
-  <!-- ![Enter Data](images/ClusterShape2.png) -->
 
 1. Click **Next** to review the details you entered for the new cluster.
 
 2. On the Review page, click **Create Cluster** to create the new network resources and the new cluster.
 
-    <!-- ![Review Cluster](images/CreateCluster.png) -->
-
-    > You see the network resources being created for you. Wait until the request to create the node pool is initiated and then click **Close**.
+    You see the network resources being created for you. Wait until the request to create the node pool is initiated and then click **Close**.
 
     ![Network Resource](images/NetworkCreation.png)
 
-    > The new cluster is shown on the Cluster Details page. When the master nodes are created, the new cluster gains a status of *Active* (it takes about 7 minutes).
+    The new cluster is shown on the Cluster Details page. When the control plane nodes are created, the status of new cluster becomes *Active*. This usually takes around 10 minutes.
 
     ![cluster1](images/ClusterProvision.png)
 
     ![cluster1](images/ClusterActive.png)
 
-    Now your OKE cluster is ready. You can move to Kubeflow installation.
-
-### Install Kubeflow
-
-# Setup Kubeflow
-
-## Prerequisites
-
-The following tools are required:
-- oci-cli,
-- kubectl,
-- git are integrated
-
-In this guide, we will use the OCI Cloud Shell console, and all these tools are integrated.
-
-### Warning
-
-<!-- - **Kubeflow 1.6.0 is not compatible with version Kubernetes 1.22 and backwards.** -->
-- Kustomize (version 3.2.0) ([download link](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0))
-    - Kubeflow 1.6.0 is not compatible with the latest versions of Kustomize.
-
-## Preparation steps
-
-1. Install Kustomize in Cloud Shell
-
-    - Open the OCI Cloud Shell
-
-    - Make sure you are in the top level directory
-
-            cd $HOME
-
-    - Download Kustomize version 3.2.0 and install in into your OCI Cloud Shell environment.
-
-            curl -L -o kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64
-            chmod +x ./kustomize
-
-2. Clone the Kubeflow repository version 1.6.0 into your OCI Cloud Shell environment
-
-        git clone -b v1.6-branch https://github.com/kubeflow/manifests.git kubeflow_1.6
-        cd kubeflow_1.6
-
-3. Change the default password
-
-    By default email user@example.com and password is 12341234
-    
-    Generate a password.
-    
-    **Replace PASSWORD with your own password.**
-
-        PASSWORD=YOURPASSWORD
-        kubeflow_password=$(htpasswd -nbBC 12 USER $PASSWORD| sed -r 's/^.{5}//')
-
-    Edit Dex config-map.yaml
-  
-    Make sure you are in the kubeflow manifests folder.
-
-        cd $HOME/kubeflow_1.6/
-        cp common/dex/base/config-map.yaml{,.org}
-        cat common/dex/base/config-map.yaml.org | sed "s|hash:.*|hash: $kubeflow_password|" > common/dex/base/config-map.yaml
+    Now that your OKE cluster is ready, we can move on to the Kubeflow installation.
 
 ## Install Kubeflow
 
-1. Access your cluster
+## Prerequisites
 
-  Click Access Cluster on your cluster detail page.
-  Accept the default **Cloud Shell Access** and click **Copy** copy the `oci ce cluster create-kubeconfig ...` command and paste it into the Cloud Shell and run the command.
-  <!-- > If you installed your cluster using the single-script the access is already set. -->
+The following utilities are required to install Kubeflow:
+
+- [OCI-CLI](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cliconcepts.htm)
+- [kubectl](https://kubernetes.io/docs/reference/kubectl/)
+- [git](https://git-scm.com/)
+
+These tools are installed by default in your Cloud Shell instance.
+
+> **Warning:** use [Kustomize v3.2.0](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0) as Kubeflow 1.6.0 is not compatible with the later versions of Kustomize.
+
+### Preparation
+
+1. Install Kustomize in Cloud Shell
+
+    - Open Cloud Shell
+
+    - Make sure you are in your home directory
+
+            cd ~
+
+    - Download Kustomize v3.2.0 and install it in your Cloud Shell environment.
+
+            curl -sfL https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64 -o kustomize
+            chmod +x ./kustomize
+
+2. Clone the v1.6.0 branch of the Kubeflow manifests repository to your Cloud Shell environment
+
+        git clone -b v1.6-branch https://github.com/kubeflow/manifests.git kubeflow-1.6
+        cd kubeflow-1.6
+
+3. Replace the default email address and password used by Kubeflow with a randomly generated one:
+    
+   ```shell
+   $ PASSWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 55 | head -n 1)
+   $ KF_PASSWD=$(htpasswd -nbBC 12 USER $PASSWORD| sed -r 's/^.{5}//')
+   $ sed -i.orig "s|hash:.*|hash: $KF_PASSWD|" common/dex/base/config-map.yaml 
+   $ echo "Random password is: $PASSWD"
+
+## Install Kubeflow
+
+1. To access your OKE cluster, click **Access Cluster** on the cluster detail page. Accept the default **Cloud Shell Access** and click **Copy** to copy the `oci ce cluster create-kubeconfig ...` command. Next, paste it into your Cloud Shell session and hit **Enter**.
 
   ![cluster1](images/AccessCluster.png)
 
-  Verify that the `kubectl` is working by using the `get nodes` command. <br>
-  You may need to run this command several times until you see an output similar to the following.
+  Verify that the `kubectl` is working by using the `get nodes` command. You may need to repeat this command several times until all three nodes show `Ready` in the `STATUS` column.
 
   ```bash
     $ kubectl get nodes
@@ -177,16 +148,16 @@ In this guide, we will use the OCI Cloud Shell console, and all these tools are 
     10.0.10.48    Ready    node    19m   v1.23.4
   ```
 
-  > If you see the node's information, then the configuration was successful.
+  When all three nodes are `Ready`, your OKE install has finished successfully.
 
 2. Install Kubeflow with a single command
 
-        cd $HOME/kubeflow_1.6 
+        cd $HOME/kubeflow-1.6 
         while ! $HOME/kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
-> Installation takes about 10 to 15 min.
+Installation usually takes between 10 to 15 minutes.
 
-To check that all Kubeflow-related Pods are ready, use the following commands:
+Use the following commands to check if all the pods related to Kubeflow are ready:
 
   ```bash
 kubectl get pods -n cert-manager
@@ -198,17 +169,13 @@ kubectl get pods -n kubeflow
 kubectl get pods -n kubeflow-user-example-com
  ```
 
->It takes about 15 min to have all the containers running.
+It usually takes about 15 minutes for all the pods to start successfully.
 
-### Access Kubeflow Dashboard
+## Accessing the Kubeflow Dashboard
 
-#### Expose Kubeflow to Internet
+To enable access to the Kubeflow Dashboard from the internet, we first need to change the default `istio-ingressgateway` service created by Kubeflow into a `LoadBalancer` service using the following commands:
 
-Kubeflow v1.6 already deploy a load balancer and expose the dashboard to Internet.
 
-⚠️ Change the password before, and let's forward HTTP to HTTPS with a self-signed certificate.
-
-Change istio-ingressgateway to LoadBalancer
 
 ```
 cat <<EOF | tee $HOME/kubeflow_1.6/patchservice_lb.yaml
@@ -226,36 +193,12 @@ EOF
 
 #### Enable HTTPS
 
-  * Generate SSL certificate
+  * Create a Kubernetes Secret to store the certificate
 
-  We suggest using https://smallstep.com/
+        cd $HOME/kubeflow-ssl
+        kubectl create secret tls kubeflow-tls-cert --key=$DOMAIN.key --cert=$DOMAIN.crt -n istio-system    
 
-  Make sure you are in the top level directory
-
-    cd $HOME          
-    mkdir keys;cd keys
-    wget -O step.tar.gz https://dl.step.sm/gh-release/cli/docs-ca-install/v0.20.0/step_linux_0.20.0_amd64.tar.gz
-    tar -xf step.tar.gz
-    cp step_0.20.0/bin/step .
-
-  Generate root certificate
-
-    cd $HOME/keys
-    $HOME/keys/step certificate create root.cluster.local root.crt root.key --profile root-ca --no-password --insecure --kty=RSA
-
-  Get Ingress IP to generate certificate
-  
-    External_IP=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
-
-    cd $HOME/keys
-    $HOME/keys/step certificate create $External_IP.nip.io tls-$External_IP.crt tls-$External_IP.key --profile leaf  --not-after 8760h --no-password --insecure --kty=RSA --ca $HOME/keys/root.crt --ca-key $HOME/keys/root.key
-
-  * Create Kubernetes Secret TLS Certificate
-
-        cd $HOME/keys
-        kubectl create secret tls kubeflow-tls-cert --key=tls-$External_IP.key --cert=tls-$External_IP.crt -n istio-system    
-
-  * Update Kubeflow API Gateway
+  * Update the Kubeflow API Gateway definition
 
   Create API Gateway
 
@@ -298,9 +241,9 @@ EOF
         kubectl apply -f $HOME/kubeflow_1.6/sslenableingress.yaml
         kubectl get gateway -n kubeflow
 
-Congratulations you installed Kubelow on OKE.
+Congratulations! You have successfully installed Kubeflow on your OKE cluster.
 
-Access $External_IP.nip.io
+Visit https://<Load Balancer External IP>.nip.io to access the Kubeflow Dashboard.
 
 ![Access Kubeflow Dashboard](images/AccessKF.png)
 
@@ -310,12 +253,12 @@ Kubeflow: <https://www.kubeflow.org/>
 
 ## Contributing
 
-This project is open source.  Please submit your contributions by forking this repository and submitting a pull request!  Oracle appreciates any contributions that are made by the open source community.
+Oracle appreciates any contributions that are made by the community. Please submit your contributions by forking this repository and submitting a pull request. Opening an issue to discuss your contribution beforehand, especially if it's a new feature, would be appreciated.
 
 ## License
 
 Copyright (c) 2022 Oracle and/or its affiliates.
 
-Licensed under the Universal Permissive License (UPL), Version 1.0.
+Licensed under the Universal Permissive License (UPL), Version 1.0 as shown at https://opensource.oracle.com/licenses/upl/
 
 See [LICENSE](LICENSE) for more details.
