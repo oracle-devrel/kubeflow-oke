@@ -302,8 +302,6 @@ Congratulations you installed Kubelow on OKE.
 
 Access $External_IP.nip.io
 
-<!-- > Make sure Security List or NSG give access from outside LB TCP/80 and TCP/443 -->
-
 ![Access Kubeflow Dashboard](images/AccessKF.png)
 
 <!-- ## Notes/Issues
