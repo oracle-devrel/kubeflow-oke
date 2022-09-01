@@ -14,7 +14,7 @@
   - [Introduction](#introduction)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
-    - [Create OKE](#create-oke)
+    - [Create an Oracle Container Engine for Kubernetes (OKE) Cluster](#create-oke)
     - [Install Kubeflow](#install-kubeflow)
     - [Access Kubeflow Dashboard](#access-kubeflow-dashboard)
   - [Notes/Issues](#notesissues)
