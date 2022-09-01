@@ -11,8 +11,6 @@
 
 ## Table of Contents
 
-<!-- toc -->
-
   - [Introduction](#introduction)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
