@@ -304,9 +304,6 @@ Access $External_IP.nip.io
 
 ![Access Kubeflow Dashboard](images/AccessKF.png)
 
-<!-- ## Notes/Issues
-MISSING -->
-
 ## URLs
 
 www.kubeflow.org
