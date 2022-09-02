@@ -2,30 +2,31 @@
 
 [uri-kubernetes]: https://kubernetes.io/
 [uri-oci]: https://cloud.oracle.com/cloud-infrastructure
-[uri-oci-documentation]: https://docs.cloud.oracle.com/iaas/Content/home.htm
-[uri-oke]: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 [uri-oracle]: https://www.oracle.com
 
 [![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=oracle-devrel_kubeflow-oke)](https://sonarcloud.io/dashboard?id=oracle-devrel_kubeflow-oke)
 
-
 ## Table of Contents
 
+- [Kubeflow for Oracle Container Engine for Kubernetes](#kubeflow-for-oracle-container-engine-for-kubernetes)
+  - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
+  - [Getting Started](#getting-started)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
-    - [Create an Oracle Container Engine for Kubernetes (OKE) Cluster](#create-oke)
-    - [Install Kubeflow](#install-kubeflow)
-    - [Access Kubeflow Dashboard](#access-kubeflow-dashboard)
-  - [Notes/Issues](#notesissues)
+    - [Create an OKE cluster](#create-an-oke-cluster)
+  - [Install Kubeflow](#install-kubeflow)
+  - [Prerequisites](#prerequisites-1)
+    - [Preparation](#preparation)
+  - [Accessing the Kubeflow Dashboard](#accessing-the-kubeflow-dashboard)
+      - [Enable HTTPS](#enable-https)
   - [URLs](#urls)
   - [Contributing](#contributing)
   - [License](#license)
 
 ## Introduction
 
-
-Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed [Kubernetes][uri-kubernetes] service on [Oracle Cloud Infrastructure (OCI)][uri-oci]. 
+Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed [Kubernetes][uri-kubernetes] service on [Oracle Cloud Infrastructure (OCI)][uri-oci].
 
 ## Getting Started
 
@@ -63,13 +64,13 @@ This guide uses the [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API
 
 4. Specify the following configuration details on the Cluster Creation dialog paying close attention to the value you use in the **Shape** field:
 
-    * **Name**: The name of the cluster. Accept the default value or provide your own.
-    * **Compartment**: The name of the compartment. Accept the default value or provide your own.
-    * **Kubernetes Version**: The version of Kubernetes. Select the **v1.23.4** version.
-    * **Kubernetes API Endpoint**: Determines if the cluster control plane nodes will be directly accessible from external sources. Select the **Public Endpoint** value.
-    * **Kubernetes Worker Nodes**: Determines if the cluster worker nodes will be directly accessible from external sources. Accept the default value **Private Workers**.
-    * **Shape**: The shape to use for each node in the node pool. The shape determines the number of OCPUs and the amount of memory allocated to each node. The list shows only those shapes available in your tenancy that are supported by OKE.
-    * **Number of nodes**: The number of worker nodes to create. Accept the default value **3**.
+    - **Name**: The name of the cluster. Accept the default value or provide your own.
+    - **Compartment**: The name of the compartment. Accept the default value or provide your own.
+    - **Kubernetes Version**: The version of Kubernetes. Select the **v1.23.4** version.
+    - **Kubernetes API Endpoint**: Determines if the cluster control plane nodes will be directly accessible from external sources. Select the **Public Endpoint** value.
+    - **Kubernetes Worker Nodes**: Determines if the cluster worker nodes will be directly accessible from external sources. Accept the default value **Private Workers**.
+    - **Shape**: The shape to use for each node in the node pool. The shape determines the number of OCPUs and the amount of memory allocated to each node. The list shows only those shapes available in your tenancy that are supported by OKE.
+    - **Number of nodes**: The number of worker nodes to create. Accept the default value **3**.
     > **Caution**: *VM.Standard.E4.Flex is the recommended shape but is not available to Always Free tenancies. You should adjust the shape based on your requirements and location.*
 
   ![Quick Cluster](images/oke-specs.png)
@@ -174,8 +175,6 @@ It usually takes about 15 minutes for all the pods to start successfully.
 ## Accessing the Kubeflow Dashboard
 
 To enable access to the Kubeflow Dashboard from the internet, we first need to change the default `istio-ingressgateway` service created by Kubeflow into a `LoadBalancer` service using the following commands:
-
-
 
 ```
 cat <<EOF | tee $HOME/kubeflow_1.6/patchservice_lb.yaml
