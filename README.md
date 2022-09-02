@@ -177,7 +177,7 @@ It usually takes about 15 minutes for all the pods to start successfully.
 To enable access to the Kubeflow Dashboard from the internet, we first need to change the default `istio-ingressgateway` service created by Kubeflow into a `LoadBalancer` service using the following commands:
 
 ```
-cat <<EOF | tee $HOME/kubeflow_1.6/patchservice_lb.yaml
+cat <<EOF | tee $HOME/kubeflow-1.6/patchservice_lb.yaml
   spec:
     type: LoadBalancer
   metadata:
@@ -188,7 +188,7 @@ cat <<EOF | tee $HOME/kubeflow_1.6/patchservice_lb.yaml
       service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
 EOF
 ```
-    kubectl patch svc istio-ingressgateway -n istio-system -p "$(cat $HOME/kubeflow_1.6/patchservice_lb.yaml)"
+    kubectl patch svc istio-ingressgateway -n istio-system -p "$(cat $HOME/kubeflow-1.6/patchservice_lb.yaml)"
 
 #### Enable HTTPS
 
@@ -201,7 +201,7 @@ EOF
 
   Create API Gateway
 
-        cat <<EOF | tee $HOME/kubeflow_1.6/sslenableingress.yaml
+        cat <<EOF | tee $HOME/kubeflow-1.6/sslenableingress.yaml
         apiVersion: v1
         items:
         - apiVersion: networking.istio.io/v1beta1
@@ -237,7 +237,7 @@ EOF
           selfLink: ""
         EOF
 
-        kubectl apply -f $HOME/kubeflow_1.6/sslenableingress.yaml
+        kubectl apply -f $HOME/kubeflow-1.6/sslenableingress.yaml
         kubectl get gateway -n kubeflow
 
 Congratulations! You have successfully installed Kubeflow on your OKE cluster.
