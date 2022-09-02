@@ -16,10 +16,10 @@
     - [Prerequisites](#prerequisites)
     - [Create an OKE cluster](#create-an-oke-cluster)
   - [Install Kubeflow](#install-kubeflow)
-  - [Prerequisites](#prerequisites-1)
+    - [Requirements](#requirements)
     - [Preparation](#preparation)
   - [Accessing the Kubeflow Dashboard](#accessing-the-kubeflow-dashboard)
-      - [Enable HTTPS](#enable-https)
+    - [Enable HTTPS](#enable-https)
   - [URLs](#urls)
   - [Contributing](#contributing)
   - [License](#license)
@@ -32,7 +32,7 @@ Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed
 
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
-This guide explains how to install Kubeflow 1.6.0 on OKE using Kubernetes versions 1.22.5, 1.23.4 and 1.24.1.
+This guide explains how to install Kubeflow 1.6.0 on OKE using Kubernetes versions 1.22.5, 1.23.4 and 1.24.1 and image Oracle Linux 7.9.
 
 ## Installation
 
@@ -93,7 +93,7 @@ This guide uses the [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API
 
 ## Install Kubeflow
 
-## Prerequisites
+### Requirements
 
 The following utilities are required to install Kubeflow:
 
@@ -126,14 +126,14 @@ These tools are installed by default in your Cloud Shell instance.
         cd kubeflow-1.6
 
 3. Replace the default email address and password used by Kubeflow with a randomly generated one:
-    
+
    ```shell
    $ PASSWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 55 | head -n 1)
    $ KF_PASSWD=$(htpasswd -nbBC 12 USER $PASSWORD| sed -r 's/^.{5}//')
    $ sed -i.orig "s|hash:.*|hash: $KF_PASSWD|" common/dex/base/config-map.yaml 
    $ echo "Random password is: $PASSWD"
 
-## Install Kubeflow
+## Single command install
 
 1. To access your OKE cluster, click **Access Cluster** on the cluster detail page. Accept the default **Cloud Shell Access** and click **Copy** to copy the `oci ce cluster create-kubeconfig ...` command. Next, paste it into your Cloud Shell session and hit **Enter**.
 
@@ -190,14 +190,122 @@ EOF
 ```
     kubectl patch svc istio-ingressgateway -n istio-system -p "$(cat $HOME/kubeflow-1.6/patchservice_lb.yaml)"
 
-#### Enable HTTPS
+### Enable HTTPS
 
-  * Create a Kubernetes Secret to store the certificate
+To enable HTTPS on Istio IngressGateway you need to generate a SSL certificate.
+
+- Generate SSL certificate
+
+To generate a SSL certificate, you can use OCI Certificates your own provider, or create a sefl-signed certificate using the following [script](generate-kubeflow-cert.sh) and steps detailled below.
+
+<details><summary><b>Click to details self-signed certificate</b></summary>
+
+The following steps are designed to work without any editing but will used default values for `C` (country), `ST` (state), `L` (location), `O` (organization) and `OU` (organizational unit) fields. Feel free to edit these default values.
+
+> **Note:** The `C` field must contain a valid [Alpha-2 ISO country code](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
+
+1. Create a directory to save your certificates and change to that directory
+
+    ```shell
+    mkdir $HOME/kubeflow-ssl
+    cd $HOME/kubeflow-ssl
+    ```
+
+2. Store the external IP address of the load balancer and an auto-generated nip.io domain name as environment variables
+
+    ```shell
+    IP_ADDR=$(kubectl get svc istio-ingressgateway -n istio-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
+    DOMAIN="${IP_ADDR}.nip.io"
+    ````
+
+3. Create root CA private and public key pair
+
+    ```shell
+    openssl req -x509 \
+                -sha256 -days 356 \
+                -nodes \
+                -newkey rsa:2048 \
+                -subj "/CN=${DOMAIN}/C=US/L=San Fransisco" \
+                -keyout rootCA.key -out rootCA.crt
+    ```
+
+4. Create a certificate signing request (CSR) configuration file
+
+    ```shell
+    cat > csr.conf <<EOF
+    [ req ]
+    default_bits = 2048
+    prompt = no
+    default_md = sha256
+    req_extensions = req_ext
+    distinguished_name = dn
+
+    [ dn ]
+    C = US
+    ST = California
+    L = San Fransisco
+    O = Kubeflow
+    OU = Kubeflow
+    CN = ${DOMAIN}
+
+    [ req_ext ]
+    subjectAltName = @alt_names
+
+    [ alt_names ]
+    DNS.1 = ${DOMAIN}
+    IP.1 = ${IP_ADDR}
+    EOF
+    ```
+
+5. Create a private key
+
+    ```shell
+    openssl genrsa -out "${DOMAIN}.key" 2048
+    ```
+
+6. Create a certificate signing request using the private key and the certificate signing request configuration file created in step 4
+
+    ```shell
+    openssl req -new -key "${DOMAIN}.key" -out "${DOMAIN}.csr" -config csr.conf
+    ```
+
+7. Create a certificate signature configuration file
+
+    ```shell
+    cat > cert.conf <<EOF
+    authorityKeyIdentifier=keyid,issuer
+    basicConstraints=CA:FALSE
+    keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+    subjectAltName = @alt_names
+
+    [alt_names]
+    DNS.1 = ${DOMAIN}
+    IP.1 = ${IP_ADDR}
+    EOF
+    ```
+
+8. Sign the certificate request generated in step 6 with the CA created in step 1 using the certificate signature configuration file created in step 7
+
+    ```shell
+    openssl x509 -req \
+        -in "${DOMAIN}.csr" \
+        -CA rootCA.crt -CAkey rootCA.key \
+        -CAcreateserial -out "${DOMAIN}.crt" \
+        -days 365 \
+        -sha256 -extfile cert.conf
+    ```
+
+</details>
+<br>
+
+- Create a Kubernetes Secret to store the certificate
+
+Store the certificate as a Kubernetes TLS Secret in istio-system namespace.
 
         cd $HOME/kubeflow-ssl
         kubectl create secret tls kubeflow-tls-cert --key=$DOMAIN.key --cert=$DOMAIN.crt -n istio-system    
 
-  * Update the Kubeflow API Gateway definition
+- Update the Kubeflow API Gateway definition
 
   Create API Gateway
 
