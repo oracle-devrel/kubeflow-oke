@@ -153,14 +153,14 @@ These tools are installed by default in your Cloud Shell instance.
 
 2. Install Kubeflow with a single command
 
-        cd $HOME/kubeflow-1.6 
-        while ! $HOME/kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+       cd $HOME/kubeflow-1.6 
+       while ! $HOME/kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
 Installation usually takes between 10 to 15 minutes.
 
 Use the following commands to check if all the pods related to Kubeflow are ready:
 
-  ```bash
+```bash
 kubectl get pods -n cert-manager
 kubectl get pods -n istio-system
 kubectl get pods -n auth
@@ -168,7 +168,7 @@ kubectl get pods -n knative-eventing
 kubectl get pods -n knative-serving
 kubectl get pods -n kubeflow
 kubectl get pods -n kubeflow-user-example-com
- ```
+```
 
 It usually takes about 15 minutes for all the pods to start successfully.
 
@@ -188,6 +188,7 @@ cat <<EOF | tee $HOME/kubeflow-1.6/patchservice_lb.yaml
       service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
 EOF
 ```
+
     kubectl patch svc istio-ingressgateway -n istio-system -p "$(cat $HOME/kubeflow-1.6/patchservice_lb.yaml)"
 
 ### Enable HTTPS
