@@ -299,7 +299,7 @@ The following steps are designed to work without any editing but will use defaul
 </details>
 <br>
 
-- Create a Kubernetes Secret to store the certificate
+- Create a Kubernetes secret to store the certificate
 
 Store the certificate as a Kubernetes TLS Secret in istio-system namespace.
 
