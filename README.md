@@ -193,7 +193,7 @@ EOF
 
 ### Enable HTTPS
 
-To enable HTTPS on Istio IngressGateway you need to generate a SSL certificate.
+To enable HTTPS for the Istio ingress gateway you need to generate a SSL certificate.
 
 - Generate SSL certificate
 
