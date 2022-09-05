@@ -32,7 +32,7 @@ Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed
 
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
-This guide explains how to install Kubeflow 1.6.0 on OKE using Kubernetes versions 1.22.5, 1.23.4 and 1.24.1 and image Oracle Linux 7.9.
+This guide explains how to install Kubeflow 1.6.0 on OKE using Kubernetes versions 1.22.5, 1.23.4 and 1.24.1 running on Oracle Linux 7.
 
 ## Installation
 
@@ -128,7 +128,7 @@ These tools are installed by default in your Cloud Shell instance.
 3. Replace the default email address and password used by Kubeflow with a randomly generated one:
 
    ```shell
-   $ PASSWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 55 | head -n 1)
+   $ PASSWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
    $ KF_PASSWD=$(htpasswd -nbBC 12 USER $PASSWORD| sed -r 's/^.{5}//')
    $ sed -i.orig "s|hash:.*|hash: $KF_PASSWD|" common/dex/base/config-map.yaml 
    $ echo "Random password is: $PASSWD"
@@ -193,15 +193,15 @@ EOF
 
 ### Enable HTTPS
 
-To enable HTTPS on Istio IngressGateway you need to generate a SSL certificate.
+To enable HTTPS for the Istio ingress gateway you need to generate a SSL certificate.
 
 - Generate SSL certificate
 
-To generate a SSL certificate, you can use OCI Certificates your own provider, or create a sefl-signed certificate using the following [script](generate-kubeflow-cert.sh) and steps detailled below.
+To generate a SSL certificate, you can use OCI Certificates, your own provider, or create a self-signed certificate using the [`generate-kubeflow-cert.sh` script](generate-kubeflow-cert.sh) or by following the steps below.
 
-<details><summary><b>Click to details self-signed certificate</b></summary>
+<details><summary><b>Click for details on creating a self-signed certificate</b></summary>
 
-The following steps are designed to work without any editing but will used default values for `C` (country), `ST` (state), `L` (location), `O` (organization) and `OU` (organizational unit) fields. Feel free to edit these default values.
+The following steps are designed to work without any editing but will use default values for `C` (country), `ST` (state), `L` (location), `O` (organization) and `OU` (organizational unit) fields. Feel free to edit these default values.
 
 > **Note:** The `C` field must contain a valid [Alpha-2 ISO country code](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
 
@@ -299,9 +299,9 @@ The following steps are designed to work without any editing but will used defau
 </details>
 <br>
 
-- Create a Kubernetes Secret to store the certificate
+- Create a Kubernetes secret to store the certificate
 
-Store the certificate as a Kubernetes TLS Secret in istio-system namespace.
+Store the certificate as a Kubernetes TLS secret in the `istio-system` namespace.
 
         cd $HOME/kubeflow-ssl
         kubectl create secret tls kubeflow-tls-cert --key=$DOMAIN.key --cert=$DOMAIN.crt -n istio-system    
