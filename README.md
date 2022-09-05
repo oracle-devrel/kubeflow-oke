@@ -301,7 +301,7 @@ The following steps are designed to work without any editing but will use defaul
 
 - Create a Kubernetes secret to store the certificate
 
-Store the certificate as a Kubernetes TLS Secret in istio-system namespace.
+Store the certificate as a Kubernetes TLS secret in the `istio-system` namespace.
 
         cd $HOME/kubeflow-ssl
         kubectl create secret tls kubeflow-tls-cert --key=$DOMAIN.key --cert=$DOMAIN.crt -n istio-system    
