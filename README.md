@@ -197,7 +197,7 @@ To enable HTTPS on Istio IngressGateway you need to generate a SSL certificate.
 
 - Generate SSL certificate
 
-To generate a SSL certificate, you can use OCI Certificates your own provider, or create a sefl-signed certificate using the following [script](generate-kubeflow-cert.sh) and steps detailled below.
+To generate a SSL certificate, you can use OCI Certificates, your own provider, or create a self-signed certificate using the [`generate-kubeflow-cert.sh` script](generate-kubeflow-cert.sh) or by following the steps below.
 
 <details><summary><b>Click to details self-signed certificate</b></summary>
 
