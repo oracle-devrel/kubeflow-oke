@@ -201,7 +201,7 @@ To generate a SSL certificate, you can use OCI Certificates your own provider, o
 
 <details><summary><b>Click to details self-signed certificate</b></summary>
 
-The following steps are designed to work without any editing but will used default values for `C` (country), `ST` (state), `L` (location), `O` (organization) and `OU` (organizational unit) fields. Feel free to edit these default values.
+The following steps are designed to work without any editing but will use default values for `C` (country), `ST` (state), `L` (location), `O` (organization) and `OU` (organizational unit) fields. Feel free to edit these default values.
 
 > **Note:** The `C` field must contain a valid [Alpha-2 ISO country code](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
 
