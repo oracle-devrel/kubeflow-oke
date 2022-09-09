@@ -1,4 +1,4 @@
-# Kubeflow for Oracle Container Engine for Kubernetes
+# Kubeflow on Oracle Container Engine for Kubernetes
 
 [uri-kubernetes]: https://kubernetes.io/
 [uri-oci]: https://cloud.oracle.com/cloud-infrastructure
@@ -8,7 +8,7 @@
 
 ## Table of Contents
 
-- [Kubeflow for Oracle Container Engine for Kubernetes](#kubeflow-for-oracle-container-engine-for-kubernetes)
+- [Kubeflow on Oracle Container Engine for Kubernetes](#kubeflow-for-oracle-container-engine-for-kubernetes)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Getting Started](#getting-started)
