@@ -128,10 +128,10 @@ These tools are installed by default in your Cloud Shell instance.
 3. Replace the default email address and password used by Kubeflow with a randomly generated one:
 
    ```shell
-   $ PASSWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-   $ KF_PASSWD=$(htpasswd -nbBC 12 USER $PASSWORD| sed -r 's/^.{5}//')
-   $ sed -i.orig "s|hash:.*|hash: $KF_PASSWD|" common/dex/base/config-map.yaml 
-   $ echo "Random password is: $PASSWD"
+   PASSWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+   KF_PASSWD=$(htpasswd -nbBC 12 USER $PASSWD| sed -r 's/^.{5}//')
+   sed -i.orig "s|hash:.*|hash: $KF_PASSWD|" common/dex/base/config-map.yaml 
+   echo "Random password is: $PASSWD"
 
 ## Single command install
 
