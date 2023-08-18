@@ -1,6 +1,6 @@
 # Kubeflow on Oracle Container Engine for Kubernetes
 
-[uri-kubernetes]: https://kubernetes.io/
+[uri-Kubernetes]: https://Kubernetes.io/
 [uri-oci]: https://cloud.oracle.com/cloud-infrastructure
 [uri-oracle]: https://www.oracle.com
 
@@ -8,13 +8,15 @@
 
 ## Introduction
 
-Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed [Kubernetes][uri-kubernetes] service on [Oracle Cloud Infrastructure (OCI)][uri-oci].
+Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed [Kubernetes][uri-Kubernetes] service on [Oracle Cloud Infrastructure (OCI)][uri-oci].
 
 ## Getting Started
 
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
-This guide explains how to install Kubeflow 1.7.0 on OKE using Kubernetes versions 1.25.6 and onwards running on Oracle Linux 8.
+> ⚠️ This guide explains how to install Kubeflow 1.7.0 on OKE using Kubernetes versions 1.25.6 and onwards running on Oracle Linux 8.
+
+> Note the following steps are for testing purposes. 
 
 <!-- ## Installation -->
 
@@ -28,33 +30,81 @@ This guide uses the [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API
 
 ### Create an OKE cluster
 
-1. from the OCI Cloud Shell clone this repo.
+1. From the OCI Cloud Shell clone this repo.
 git clone https://github.com/oracle-devrel/kubeflow-oke.git
 
-1. edit the module.tf file to set the  compartment and tenancy ocid's, your home region and the region you want to deploy in review the other settings, especially the security settings around control plane access, bastions and operators
-consider the ode pool setup and if you want to use the cluster autoscaler
+1. Edit the module.tf file to set the compartment and tenancy ocid's, your home region and the region you want to deploy in review the other settings, especially the security settings around control plane access, bastions and operators
+consider the node pool setup and if you want to use the cluster autoscaler. 
 
-if you are running in the OCI cloud shell (recommended) then you're all good to go, if not you will need to configure the terraform provider security credentials
+    Review the number of nodes in each node pool, in this example we are using three node pools.
+   - system for running system processes in, e.g. prometheus and metrics server.
+   - app for running actuall applications in, e.g. the kubeflow runtime.
+   - processing for executing your actual analysis in, if you want this to auto scale set autoscale to be true and the max_node_pool_size to meet your needs.
 
-setup terraform with : terraform init
-plan the deployment : terraform plan --out=kubeflow.plan
-apply the deployment : terraform apply kubeflow.plan
 
-Now you need to follow the OCI Kubernrtes Environment instructins for getting your kubernetes config information and adding it to youre local kubeconfig
+If you are running in the OCI cloud shell (recommended), then you're all good to go. If not, you will need to configure the terraform provider security credentials
 
-Do a kubectl get nodes to be sure that the cluster is accessible
+setup terraform with : 
+```bash
+terraform init
+```
+
+plan the deployment : 
+```bash
+terraform plan --out=kubeflow.plan
+```
+
+apply the deployment : 
+```bash
+terraform apply kubeflow.plan
+```
+
+Now you need to follow the OCI Kubernetes Environment instructions for getting your Kubernetes config information and adding it to your local kubeconfig.
+
+To access your OKE cluster:
+1. Click Access Cluster on the cluster detail page.
+2. Accept the default Cloud Shell Access and click Copy to copy the oci ce cluster create-kubeconfig ... command.
+3. Paste it into your Cloud Shell session and hit Enter.
+
+![cluster1](images/AccessCluster.png)
+
+  Verify that the `kubectl` is working by using the `get nodes` command. 
+  
+  Repeat this command several times until all three nodes show `Ready` in the `STATUS` column.
+
+```bash
+kubectl get nodes
+NAME          STATUS   ROLES   AGE   VERSION
+10.0.10.176   Ready    node    19m   v1.26.2
+10.0.10.203   Ready    node    19m   v1.26.2
+10.0.10.48    Ready    node    19m   v1.26.2
+```
+
+  When all three nodes are `Ready`, your OKE install has finished successfully.
 
 ## Install Kubeflow
 
-Now you have the cluster look at the install-kubeflow.sh script
-setup the version of kustomise and the kubeflow branch to use - for example for kubeflow 1.6 you'd need a branch called v1.6-branch but you need to ensure that the branch you're using is vaid for your cluster and kustomize version. This is because you may find that things in the kubernrtesd change (e.g. autoscaler moving fomr v2beta2 to v2 in kubernrtes 1.26 means that the 1.7 branch of kuberflow woudln't work and you had to use the latest updates to the master branch)
+Now the cluster is ready, run the install-kubeflow.sh script to 
+set up the version of kustomise and the kubeflow branch to use.
+
+```bash
+./install-kubeflow.sh
+```
+
+The script output will provide you with the URL, login and password to access Kubeflow console.
+
+`Your kubeflow dashboard is at https://x.x.x.x.nip.io
+Login as user@example.com.`
+
+`This is your kubeflow password for user user@example.com
+xxxxxx`
 
 
-to destroy YOU MUST remove the none terraform constructed OCI resources, specifically the istio gateway load balancer. The easiest way here is to just remove the service with
+To destroy, you must remove the non-Terraform constructed OCI resources, specifically the Istio gateway load balancer. The easiest way here is to remove the service.
+
+```bash
 kubectl delete service istio-ingressgateway  -n istio-system
-
-Then make sure you've not doing anything with external persistence as that wil hang around once you kill off the cluster - and if on the VCN may prevent the VCN being destroyed
-once that's gone then running terraform destroy should wipe out the cluster
+```
 
 ## URLs
 

@@ -1,9 +1,5 @@
 #!/bin/bash -f
-# I know that main is the prefered branch name, but kubeflow is unfortunately still using master
-# Ideally you'd be able to download a specific version as that would allow for reproducability, but for 1.7 at any rate
-# KY has a required post 1.7 update for K8s 1.26 clusters the autoscaler is now v2, not v2betav2 and that breaks things
-# if you are using a pre 1.26 version of k8s and want to force a branch then set this to something like 
-# v1.7-branch
+# Copyright (c) 2022, Oracle and/or its affiliates.
 KF_VERSION_BRANCH_NAME=master
 KUSTOMIZE_VERSION=5.1.0
 # setup KF and download

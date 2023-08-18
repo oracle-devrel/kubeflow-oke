@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright (c) 2023, Oracle and/or its affiliates.
 # Set it up to install on a reboot
 cat  <<EOF | sudo tee /etc/modules-load.d/99-istio-modules.conf
 # These modules need to be loaded on boot so that Istio (as required by
