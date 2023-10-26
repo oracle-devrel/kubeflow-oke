@@ -14,7 +14,7 @@ Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed
 
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
-> ⚠️ This guide explains how to install Kubeflow 1.7.0 on OKE using Kubernetes versions 1.25.6 and onwards running on Oracle Linux 8.
+> ⚠️ This guide explains how to install Kubeflow 1.7.0 on OKE using Kubernetes versions 1.27.2 and onwards running on Oracle Linux 8.
 
 > Note the following steps are for testing purposes. 
 
@@ -33,14 +33,14 @@ This guide uses the [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API
 1. From the OCI Cloud Shell clone this repo.
 git clone https://github.com/oracle-devrel/kubeflow-oke.git
 
-1. Edit the module.tf file to set the compartment and tenancy ocid's, your home region and the region you want to deploy in review the other settings, especially the security settings around control plane access, bastions and operators
-consider the node pool setup and if you want to use the cluster autoscaler. 
+1. Edit the module.tf file to set the compartment and tenancy ocid's, your home region and the region you want to deploy in review the other settings, especially the security settings around control plane access, bastions and operators. If needed change the Kubernetes version to match the version supported by the Kubeflow version you are installing. Consider the node pool setup and if you want to use the cluster autoscaler. 
 
     Review the number of nodes in each node pool, in this example we are using three node pools.
    - system for running system processes in, e.g. prometheus and metrics server.
    - app for running actuall applications in, e.g. the kubeflow runtime.
    - processing for executing your actual analysis in, if you want this to auto scale set autoscale to be true and the max_node_pool_size to meet your needs.
 
+2. Edit the providers.tf file, replace the first provider region with the name of the region you want to create the OKE cluster in, replace the second provider region with the name of your home region (there are comments indicating which one to change to what).
 
 If you are running in the OCI cloud shell (recommended), then you're all good to go. If not, you will need to configure the terraform provider security credentials
 
