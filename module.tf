@@ -31,7 +31,7 @@ module oke {
   control_plane_allowed_cidrs=["0.0.0.0/0"]
 
   # what version of kubernetes to instal, not all kubernrtes versions are supported so check in the OCI UI
-  kubernetes_version="v1.26.2"
+  kubernetes_version="v1.27.2"
 
   # The below is a 3 node pool setup, assuming that you have the mechanisms in kubeflow to setup affinity to target workloads to specific pools / processing types
   node_pools = {
