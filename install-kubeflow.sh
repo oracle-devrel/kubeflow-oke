@@ -1,6 +1,6 @@
 #!/bin/bash -f
 # Copyright (c) 2022, Oracle and/or its affiliates.
-KF_VERSION_BRANCH_NAME=master
+KF_VERSION_BRANCH_NAME=1.7
 KUSTOMIZE_VERSION=5.1.0
 # setup KF and download
 cd $HOME
@@ -27,8 +27,8 @@ echo "The password for user@example.com is  $PASSWD"
 KF_PASSWD=$(htpasswd -nbBC 12 USER $PASSWD| sed -r 's/^.{5}//')
 # echo $KF_PASSWD 
 # Taken note of this output
-cd $HOME/kubeflow-$KF_VERSION
-sed -i.orig "s|hash:.*|hash: $KF_PASSWD|" common/dex/base/config-map.yaml
+cd $HOME/kubeflow-$KF_VERSION_BRANCH_NAME
+sed -i.orig "s|DEX_USER_PASSWORD:.*|DEX_USER_PASSWORD: $KF_PASSWD|" common/dex/base/dex-passwords.yaml 
 
 # do the actual install
 echo "Starting kubeflow install, this may take a while"
@@ -146,7 +146,7 @@ metadata:
   selfLink: ""
 EOF
 
-# apple the patch
+# apply the patch
 kubectl apply -f $HOME/kubeflow/sslenableingress.yaml
 # and you're done
 
