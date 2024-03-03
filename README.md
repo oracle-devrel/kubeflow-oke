@@ -14,7 +14,7 @@ Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed
 
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
-> ⚠️ This guide explains how to install Kubeflow 1.7.0 on OKE using Kubernetes versions 1.27.2 and onwards running on Oracle Linux 8.
+> ⚠️ This guide explains how to install Kubeflow 1.8.0 on OKE using Kubernetes versions 1.28.2 and onwards running on Oracle Linux 8.
 
 > Note the following steps are for testing purposes. 
 
@@ -116,7 +116,7 @@ Oracle appreciates any contributions that are made by the community. Please subm
 
 ## License
 
-Copyright (c) 2022 Oracle and/or its affiliates.
+Copyright (c) 2024 Oracle and/or its affiliates.
 
 Licensed under the Universal Permissive License (UPL), Version 1.0 as shown at https://opensource.oracle.com/licenses/upl/
 
