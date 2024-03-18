@@ -1,6 +1,6 @@
 #!/bin/bash -f
 # Copyright (c) 2022, Oracle and/or its affiliates.
-KF_VERSION_BRANCH_NAME=1.7
+KF_VERSION_BRANCH_NAME=1.8
 KUSTOMIZE_VERSION=5.1.0
 # setup KF and download
 cd $HOME
@@ -28,7 +28,7 @@ KF_PASSWD=$(htpasswd -nbBC 12 USER $PASSWD| sed -r 's/^.{5}//')
 # echo $KF_PASSWD 
 # Taken note of this output
 cd $HOME/kubeflow-$KF_VERSION_BRANCH_NAME
-sed -i.orig "s|DEX_USER_PASSWORD:.*|DEX_USER_PASSWORD: $KF_PASSWD|" common/dex/base/dex-passwords.yaml 
+sed -i.orig "s|DEX_USER_PASSWORD:.*|DEX_USER_PASSWORD: $KF_PASSWD|" common/dex/base/dex-passwords.yaml
 
 # do the actual install
 echo "Starting kubeflow install, this may take a while"
@@ -55,7 +55,8 @@ EOF
 echo "Applying load balancer patsh to the istio gateway"
 kubectl patch svc istio-ingressgateway -n istio-system -p "$(cat $HOME/kubeflow/patchservice_lb.yaml)"
 
-
+mkdir $HOME/kubeflow/ssl
+cd $HOME/kubeflow/ssl
 echo "Creating certificates for the load balancer"
 #create the certificate for the LB IP
 # wait for the LB IP
@@ -108,7 +109,7 @@ openssl x509 -req     -in "${DOMAIN}.csr"     -CA rootCA.crt -CAkey rootCA.key  
 #create the secret
 kubectl create secret tls kubeflow-tls-cert --key=$DOMAIN.key --cert=$DOMAIN.crt -n istio-system
 
-echo "Updting the ingress with the generated certificate"
+echo "Updating the ingress with the generated certificate"
 # patch the istio gateway
 cat <<EOF | tee $HOME/kubeflow/sslenableingress.yaml
 apiVersion: v1
