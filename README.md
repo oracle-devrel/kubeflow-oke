@@ -53,27 +53,27 @@ This section describes how to:
     - **App** for running actual applications, e.g. the kubeflow runtime.
     - **Processing** for executing your actual analysis in, if you want this to auto scale set `autoscale` to `True` and modify `max_node_pool_size` to meet your needs.
 
-3. Edit the `provider.tf` file:
+4. Edit the `provider.tf` file:
 
     - Replace the first provider region with the name of the region you want to create the OKE cluster in, replace the second provider region with the name of your home region (there are comments indicating which one to change to what).
 
-4. If you aren't running this installation in your OCI Cloud Shell instance, you will need to configure  OCI's security credentials for Terraform:
+5. If you aren't running this installation in your OCI Cloud Shell instance, you will need to configure  OCI's security credentials for Terraform:
 
     ```bash
     terraform init
     ```
 
-5. Plan the deployment, and let's save the plan to a file:
+6. Plan the deployment, and let's save the plan to a file:
 
     ```bash
     terraform plan --out=kubeflow.plan
     ```
 
-6. Apply the deployment (run the script):
+7. Apply the deployment (run the script):
 
-```bash
-terraform apply kubeflow.plan
-```
+    ```bash
+    terraform apply kubeflow.plan
+    ```
 
 Now you need to follow the OCI Kubernetes Environment instructions for getting your Kubernetes config information and adding it to your local kubeconfig.
 
