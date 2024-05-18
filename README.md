@@ -10,6 +10,12 @@
 
 Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed [Kubernetes][uri-Kubernetes] service on [Oracle Cloud Infrastructure (OCI)][uri-oci].
 
+In this demo, we will show how to create a Kubernetes cluster, and install Kubeflow within it.
+
+Kubeflow is an open-source platform for machine learning and MLOps on Kubernetes introduced by Google. The different stages in a typical machine learning lifecycle are represented with different software components in Kubeflow, including model development, model training, model serving, and automated machine learning.
+
+Once we have Kubeflow installed, we'll use it to create a Jupyter notebook environment so you can have your own self-hosted Jupyter environment to run GPU and High-Performance Computing (HPC) workloads seamlessly.
+
 ## Getting Started
 
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
