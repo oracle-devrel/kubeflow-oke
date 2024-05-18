@@ -12,7 +12,7 @@ Oracle Container Engine for Kubernetes (OKE) is the [Oracle][uri-oracle]-managed
 
 ## Getting Started
 
-[!IMPORTANT] ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
+> ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
 This guide explains how to install Kubeflow 1.8.0 on OKE using Kubernetes versions 1.28.2 and onwards running on Oracle Linux 8.
 
@@ -108,7 +108,7 @@ Now that the cluster is ready, we can begin to install Kubeflow within the OKE c
 0. If you're running in a Compute Instance and not Cloud Shell, you will need to install `Kustomize`:
 
     ```bash
-    
+    curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
     ```
 
 1. Let's run the `install-kubeflow.sh` script (found in this repository's) to set up the version of `kustomise` and specify which `kubeflow` branch to use:
