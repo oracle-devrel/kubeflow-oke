@@ -1,4 +1,4 @@
-# Kubeflow on Oracle Container Engine for Kubernetes
+# Kubeflow on Oracle Container Engine for Kubernetes (OKE)
 
 [uri-Kubernetes]: https://Kubernetes.io/
 [uri-oci]: https://cloud.oracle.com/cloud-infrastructure
@@ -14,21 +14,30 @@ In this demo, we will show how to create a Kubernetes cluster, and install Kubef
 
 Kubeflow is an open-source platform for machine learning and MLOps on Kubernetes introduced by Google. The different stages in a typical machine learning lifecycle are represented with different software components in Kubeflow, including model development, model training, model serving, and automated machine learning.
 
-Once we have Kubeflow installed, we'll use it to create a Jupyter notebook environment so you can have your own self-hosted Jupyter environment to run GPU and High-Performance Computing (HPC) workloads seamlessly.
+Once we have Kubeflow installed, we'll use it to create a **Jupyter notebook environment** so you can have your own self-hosted Jupyter environment to run GPU and High-Performance Computing (HPC) workloads seamlessly.
+
+To run our demo's workflow, we will use the [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/devcloudshellintro.htm) built into the Oracle Cloud Console but can also be run from your local workstation.
+
+## 0. Prerequisites & Docs
+
+### Prerequisites
+
+- An Oracle Cloud Infrastructure (OCI) Account
+
+This guide can be run in many different ways, but in all cases, you will need to be signed into your Oracle Cloud Infrastructure tenancy.
+
+### Docs
+
+[Kubeflow](https://www.kubeflow.org/)
+[Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/devcloudshellintro.htm)
+
+## 1. Create an OKE cluster
 
 ## Getting Started
 
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
-This guide explains how to install Kubeflow 1.8.0 on OKE using Kubernetes versions 1.28.2 and onwards running on Oracle Linux 8.
-
-### Prerequisites
-
-This guide can be run in many different ways, but in all cases, you will need to be signed into an Oracle Cloud Infrastructure tenancy.
-
-This guide uses the [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/devcloudshellintro.htm) built into the Oracle Cloud Console but can also be run from your local workstation.
-
-## 1. Create an OKE cluster
+We will install Kubeflow *1.8.0* on OKE using Kubernetes versions *1.28.2* and onwards running on Oracle Linux 8.
 
 This section describes how to:
 
@@ -83,31 +92,27 @@ This section describes how to:
 
 Now you need to follow the OCI Kubernetes Environment instructions for getting your Kubernetes config information and adding it to your local kubeconfig.
 
-To access your OKE cluster:
+## 2. Access your OKE cluster
 
 1. Click Access Cluster on the `Cluster details` page:
 
     ![cluster1](images/AccessCluster.png)
 
-2. Accept the default Cloud Shell Access and click Copy to copy the oci ce cluster create-kubeconfig ... command.
+2. You can either choose to run Kubernetes on the Cloud Shell (easiest) or on your own machine. It's recommended to use Cloud Shell, as otherwise you'd need to install OCI CLI and authenticate yourself. Accept the default Cloud Shell Access and click Copy to copy the `oci ce cluster create-kubeconfig ...` command.
 
 3. To access the cluster, paste the command into your Cloud Shell session and hit Enter.
 
-4. Verify that the `kubectl` is working by using the `get nodes` command.
+4. Verify that the `kubectl` is working by using the `get nodes` command:
+
+    ```bash
+    kubectl get nodes
+    ```
 
 5. Repeat this command multiple times until all three nodes show `Ready` in the `STATUS` column:
 
-    ```bash
-    $ kubectl get nodes
-    NAME          STATUS   ROLES   AGE   VERSION
-    10.0.10.176   Ready    node    19m   v1.26.2
-    10.0.10.203   Ready    node    19m   v1.26.2
-    10.0.10.48    Ready    node    19m   v1.26.2
-    ```
-
     When all three nodes are `Ready`, your OKE installation has finished successfully.
 
-## Install Kubeflow
+## 3. Install Kubeflow
 
 Now that the cluster is ready, we can begin to install Kubeflow within the OKE cluster.
 
@@ -125,7 +130,7 @@ Now that the cluster is ready, we can begin to install Kubeflow within the OKE c
 
 2. The script output will provide you with the URL, login and password to access Kubeflow console.
 
-3. Your kubeflow dashboard is at https://<IP_ADDRESS>. Login as `user@example.com`:
+3. Your kubeflow dashboard is at `https://<IP_ADDRESS>`. Login as `user@example.com`:
 
     ```bash
     This is your kubeflow password for user user@example.com:
@@ -139,20 +144,27 @@ Now that the cluster is ready, we can begin to install Kubeflow within the OKE c
   kubectl delete service istio-ingressgateway  -n istio-system
   ```
 
-## URLs
-
-Kubeflow: https://www.kubeflow.org/
 
 ## Contributing
 
-Oracle appreciates any contributions that are made by the community. Please submit your contributions by forking this repository and submitting a pull request. Opening an issue to discuss your contribution beforehand, especially if it's a new feature, would be appreciated.
+<!-- If your project has specific contribution requirements, update the
+    CONTRIBUTING.md file to ensure those requirements are clearly explained. -->
+
+This project welcomes contributions from the community. Before submitting a pull
+request, please [review our contribution guide](./CONTRIBUTING.md).
+
+## Security
+
+Please consult the [security guide](./SECURITY.md) for our responsible security
+vulnerability disclosure process.
 
 ## License
 
 Copyright (c) 2024 Oracle and/or its affiliates.
 
-Licensed under the Universal Permissive License (UPL), Version 1.0 as shown at https://opensource.oracle.com/licenses/upl/
+Licensed under the Universal Permissive License (UPL), Version 1.0.
 
 See [LICENSE](LICENSE) for more details.
 
-ORACLE AND ITS AFFILIATES DO NOT PROVIDE ANY WARRANTY WHATSOEVER, EXPRESS OR IMPLIED, FOR ANY SOFTWARE, MATERIAL OR CONTENT OF ANY KIND CONTAINED OR PRODUCED WITHIN THIS REPOSITORY, AND IN PARTICULAR SPECIFICALLY DISCLAIM ANY AND ALL IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE. FURTHERMORE, ORACLE AND ITS AFFILIATES DO NOT REPRESENT THAT ANY CUSTOMARY SECURITY REVIEW HAS BEEN PERFORMED WITH RESPECT TO ANY SOFTWARE, MATERIAL OR CONTENT CONTAINED OR PRODUCED WITHIN THIS REPOSITORY. IN ADDITION, AND WITHOUT LIMITING THE FOREGOING, THIRD PARTIES MAY HAVE POSTED SOFTWARE, MATERIAL OR CONTENT TO THIS REPOSITORY WITHOUT ANY REVIEW. USE AT YOUR OWN RISK.
+ORACLE AND ITS AFFILIATES DO NOT PROVIDE ANY WARRANTY WHATSOEVER, EXPRESS OR IMPLIED, FOR ANY SOFTWARE, MATERIAL OR CONTENT OF ANY KIND CONTAINED OR PRODUCED WITHIN THIS REPOSITORY, AND IN PARTICULAR SPECIFICALLY DISCLAIM ANY AND ALL IMPLIED WARRANTIES OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.  FURTHERMORE, ORACLE AND ITS AFFILIATES DO NOT REPRESENT THAT ANY CUSTOMARY SECURITY REVIEW HAS BEEN PERFORMED WITH RESPECT TO ANY SOFTWARE, MATERIAL OR CONTENT CONTAINED OR PRODUCED WITHIN THIS REPOSITORY. IN ADDITION, AND WITHOUT LIMITING THE FOREGOING, THIRD PARTIES MAY HAVE POSTED SOFTWARE, MATERIAL OR CONTENT TO THIS REPOSITORY WITHOUT ANY REVIEW. USE AT YOUR OWN RISK.
+
