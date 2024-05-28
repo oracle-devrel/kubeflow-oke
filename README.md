@@ -23,6 +23,7 @@ To run our demo's workflow, we will use the [Cloud Shell](https://docs.oracle.co
 ### Prerequisites
 
 - An Oracle Cloud Infrastructure (OCI) Account
+- The tenancy shall have access to NVIDIA A10 Tensor Core GPU(s). Although it's not compulsory (you could run Kubeflow on CPU), launching this AI workload will work best with GPUs.
 
 This guide can be run in many different ways, but in all cases, you will need to be signed into your Oracle Cloud Infrastructure tenancy.
 
@@ -143,7 +144,6 @@ Now that the cluster is ready, we can begin to install Kubeflow within the OKE c
   ```bash
   kubectl delete service istio-ingressgateway  -n istio-system
   ```
-
 
 ## Contributing
 
