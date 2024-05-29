@@ -16,10 +16,9 @@ git clone https://github.com/kubeflow/manifests.git kubeflow-$KF_VERSION_BRANCH_
 cd kubeflow-$KF_VERSION_BRANCH_NAME
 echo "Checking out branch $KF_VERSION_BRANCH_NAME"
 git checkout $KF_VERSION_BRANCH_NAME
-# almost certainly un needed, but just to be safe
+# almost certainly not needed, but just to be safe
 git pull origin
-# is this needed in the cloud shell ?
-# doesn't seem to be ion my setup
+
 echo "Generating password"
 # sudo yum install httpd-tools -y
 PASSWD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
@@ -33,7 +32,7 @@ sed -i.orig "s|DEX_USER_PASSWORD:.*|DEX_USER_PASSWORD: $KF_PASSWD|" common/dex/b
 # do the actual install
 echo "Starting kubeflow install, this may take a while"
 
-while ! $HOME/kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+while ! $HOME/kustomize build example --load-restrictor LoadRestrictionsNone | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
 
 # Once it's suceeded do this in s separate directory so we can change things easily
