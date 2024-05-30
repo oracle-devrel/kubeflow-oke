@@ -38,11 +38,15 @@ This guide can be run in many different ways, but in all cases, you will need to
 
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
-We will install Kubeflow *1.8.0* on OKE using Kubernetes versions *1.28.2* and onwards running on Oracle Linux 8.
+We will install Kubeflow *1.8.1* on OKE using Kubernetes versions *1.29.1* and onwards running on Oracle Linux 8.
+
+## Recommendation
+
+If you provision an OKE cluster manually or deploy with your own terraform, you need to disable in transit volumes and apply the cloud init script.
 
 This section describes how to:
 
-- Create a Kubernetes cluster using OKE
+- Create a Kubernetes cluster using OKE and [The Terraform OKE Module](https://github.com/oracle-terraform-modules/terraform-oci-oke)
 - Accessing OKE
 - Installing Kubeflow and how to expose the Kubeflow Dashboard
 
@@ -50,10 +54,12 @@ This section describes how to:
 
     ```bash
     git clone https://github.com/oracle-devrel/kubeflow-oke.git
-    cd kubeflow-oke # get into the directory after cloning
     ```
-
-2. Obtain the OCIDs we will need for the next step:
+2. To Create a Kubernetes cluster clone [The Terraform OKE Module](https://github.com/oracle-terraform-modules/terraform-oci-oke) repository to deploy OKE Cluster
+    ```bash
+    git clone https://github.com/oracle-terraform-modules/terraform-oci-oke.git
+    ```
+3. Obtain the OCIDs we will need for the next step:
 
     ```bash
     echo $OCI_TENANCY
@@ -61,7 +67,7 @@ This section describes how to:
     echo $OCI_COMPARTMENT
     ```
 
-3. Edit the `module.tf` file. We ned to set 4 variables: the compartment and tenancy OCIDs, your home region (see [all region identifiers here](https://docs.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm)) and the region identifier where you want to deploy Kubeflow. From here, you can also review other settings, including security settings around control plane access, bastions and operators. If needed, change the Kubernetes version to match the version supported by the Kubeflow version you are installing. Consider the node pool setup and if you want to use the cluster autoscaler.
+4. Edit the `kubeflow-oke/terraform.tfvars.example` file. We ned to set 4 variables: the compartment and tenancy OCIDs, your home region (see [all region identifiers here](https://docs.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm)) and the region identifier where you want to deploy Kubeflow. From here, you can also review other settings, including security settings around control plane access, bastions and operators. If needed, change the Kubernetes version to match the version supported by the Kubeflow version you are installing. Consider the node pool setup and if you want to use the cluster autoscaler.
 
     Review the number of nodes in each node pool, in this example we are using three node pools.
 
@@ -69,23 +75,23 @@ This section describes how to:
     - **App** for running actual applications, e.g. the kubeflow runtime.
     - **Processing** for executing your actual analysis in, if you want this to auto scale set `autoscale` to `True` and modify `max_node_pool_size` to meet your needs.
 
-4. Edit the `provider.tf` file:
+5. Copy the `terraform.tfvars.example` as `terraform.tfvars` in terraform-oci-oke folder.
 
-    - Replace the first provider region with the name of the region you want to create the OKE cluster in, replace the second provider region with the name of your home region (there are comments indicating which one to change to what).
+    <!-- - Replace the first provider region with the name of the region you want to create the OKE cluster in, replace the second provider region with the name of your home region (there are comments indicating which one to change to what). -->
 
-5. If you aren't running this installation in your OCI Cloud Shell instance, you will need to configure  OCI's security credentials for Terraform:
+6. If you aren't running this installation in your OCI Cloud Shell instance, you will need to configure  OCI's security credentials for Terraform. From terraform-oci-oke folder init Terraform:
 
     ```bash
     terraform init
     ```
 
-6. Plan the deployment, and let's save the plan to a file:
+7. Plan the deployment, and let's save the plan to a file:
 
     ```bash
     terraform plan --out=kubeflow.plan
     ```
 
-7. Apply the deployment (run the script):
+8. Apply the deployment (run the script):
 
     ```bash
     terraform apply kubeflow.plan
