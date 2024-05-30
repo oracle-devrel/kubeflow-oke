@@ -42,7 +42,7 @@ We will install Kubeflow *1.8.1* on OKE using Kubernetes versions *1.29.1* and o
 
 ## Recommendation
 
-If you provision an OKE cluster manually or deploy with your own terraform, you need to disable in transit volumes and apply the cloud init script.
+If you provision an OKE cluster manually or deploy with your own terraform, you need to disable se in-transit encryption and apply the cloud init script to enable Istio.
 
 This section describes how to:
 
