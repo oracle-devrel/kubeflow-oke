@@ -2,12 +2,12 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
-api_fingerprint      = "f9:9d:02:05:81:07:39:48:40:b7:2b:f7:92:4b:66:57"
-api_private_key_path = "~/.oci/ali_private.pem"
+api_fingerprint      = ""
+api_private_key_path = ""
 
-home_region = "eu-marseille-1"
-region      = "eu-marseille-1"
-tenancy_id  = "ocid1.tenancy.oc1..aaaaaaaaiknfacmymcxj7xityeooj5b5pqmbshuslca5oecnkoq2zsjwzoxa"
+home_region = ""
+region      = ""
+tenancy_id  = ""
 user_id     = "ocid1.user.oc1..aaaaaaaamleevtj3vskewzr6axqlys5oce6crig6cwuai3mywqypmj3oml4q"
 
 # general oci parameters
@@ -17,8 +17,8 @@ timezone       = "Europe/Madrid"
 # ssh keys
 # ssh_private_key_path = "~/.ssh/id_ed25519"
 # ssh_public_key_path  = "~/.ssh/id_ed25519.pub"
-ssh_private_key_path = "/Users/julsilve/.ssh/id_rsa"
-ssh_public_key_path  = "/Users/julsilve/.ssh/id_rsa.pub"
+ssh_private_key_path = ""
+ssh_public_key_path  = ""
 
 # networking
 create_vcn               = true
@@ -26,8 +26,8 @@ assign_dns               = true
 local_peering_gateways   = {}
 lockdown_default_seclist = true
 vcn_cidrs                = ["10.0.0.0/16"]
-vcn_dns_label            = "julien"
-vcn_name                 = "julien"
+vcn_dns_label            = "kubeflow"
+vcn_name                 = "kubeflow"
 
 # Subnets
 subnets = {
@@ -107,7 +107,7 @@ use_defined_tags         = false // true/*false
 
 # cluster
 create_cluster     = true
-cluster_name       = "julien"
+cluster_name       = "kubeflow"
 cni_type           = "flannel"
 kubernetes_version = "v1.29.1"
 pods_cidr          = "10.244.0.0/16"
