@@ -1,6 +1,6 @@
 #!/bin/bash -f
 # Copyright (c) 2022, Oracle and/or its affiliates.
-KF_VERSION_BRANCH_NAME=1.8
+KF_VERSION_BRANCH_NAME=1.8.1
 KUSTOMIZE_VERSION=5.1.0
 # setup KF and download
 cd $HOME
@@ -28,6 +28,8 @@ KF_PASSWD=$(htpasswd -nbBC 12 USER $PASSWD| sed -r 's/^.{5}//')
 # Taken note of this output
 cd $HOME/kubeflow-$KF_VERSION_BRANCH_NAME
 sed -i.orig "s|DEX_USER_PASSWORD:.*|DEX_USER_PASSWORD: $KF_PASSWD|" common/dex/base/dex-passwords.yaml
+#Disable knative-eventing
+sed -i.orig "s|- ../common/knative/knative-eventing/base|#- ../common/knative/knative-eventing/base|" example/kustomization.yaml 
 
 # do the actual install
 echo "Starting kubeflow install, this may take a while"
