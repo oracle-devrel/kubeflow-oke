@@ -1,24 +1,30 @@
 # Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# Identity and access parameters
-api_fingerprint      = ""
-api_private_key_path = ""
+#ReadMe
+#copy as terraform.tfvars in terraform-oci-oke folder
+#Update the variable below
 
-home_region = ""
-region      = ""
-tenancy_id  = ""
-user_id     = "ocid1.user.oc1..aaaaaaaamleevtj3vskewzr6axqlys5oce6crig6cwuai3mywqypmj3oml4q"
+# Identity and access parameters
+api_fingerprint      = "" #to update
+api_private_key_path = "" #to update
+
+
+home_region = "" #to update
+region      = "" #to update
+tenancy_id  = ""#to update
+user_id     = "" #to update
 
 # general oci parameters
-compartment_id = "ocid1.compartment.oc1..aaaaaaaa2xtghd66g7sxoyhrutuo6ldfokba72s6kulbaa63y7nw7dxraaaa"
+compartment_id = "" #to update
 timezone       = "Europe/Madrid"
 
 # ssh keys
 # ssh_private_key_path = "~/.ssh/id_ed25519"
 # ssh_public_key_path  = "~/.ssh/id_ed25519.pub"
-ssh_private_key_path = ""
-ssh_public_key_path  = ""
+ssh_private_key_path = "" #to update
+ssh_public_key_path  = "" #to update
+
 
 # networking
 create_vcn               = true
