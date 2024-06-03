@@ -34,8 +34,6 @@ This guide can be run in many different ways, but in all cases, you will need to
 
 ## 1. Create an OKE cluster
 
-## Getting Started
-
 > ⚠️ Kubeflow 1.5.0 is not compatible with Kubernetes version 1.22 and onwards. To install Kubeflow 1.5.0 or older, set the Kubernetes version of your OKE cluster to v1.21.5.
 
 We will install Kubeflow *1.8.0* on OKE using Kubernetes versions *1.28.2* and onwards running on Oracle Linux 8.
