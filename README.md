@@ -18,6 +18,8 @@ Once we have Kubeflow installed, we'll use it to create a **Jupyter notebook env
 
 To run our demo's workflow, we will use the [Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/devcloudshellintro.htm) built into the Oracle Cloud Console but can also be run from your local workstation.
 
+[You can watch the solution's video here.](https://youtu.be/Cc90XzwZ3fQ)
+
 ## 0. Prerequisites & Docs
 
 ### Prerequisites
